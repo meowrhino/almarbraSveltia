@@ -50,6 +50,7 @@ function campo(name, s, required, dato, def, path) {
   const tipos = [].concat(s.type || []);
   if (RELACIONES[path]) return { ...f, ...RELACIONES[path] };
   if (s.enum) return { ...f, widget: 'select', options: s.enum };
+  if (s.format === 'date') return { ...f, widget: 'datetime', type: 'date', format: 'YYYY-MM-DD' };
   if (tipos.includes('string')) {
     return { ...f, widget: s._def === 'parrafo' ? 'text' : 'string', ...(s.pattern && { pattern: [s.pattern, s.description || 'no tiene la forma que toca'] }) };
   }
@@ -86,6 +87,8 @@ export function config({ schemas, site, repo }) {
     backend: { name: 'github', repo, ...(AUTH && { base_url: AUTH }) },
     media_folder: 'projects',   // obligatorio; cada proyecto usa su img/
     output: { omit_empty_optional_fields: true, json: { indent_size: 2 } },
+    /* Una foto subida desde el panel sale como de imgToWeb: WebP, q85, ≤ 2000 px. */
+    media_libraries: { default: { config: { transformations: { raster_image: { format: 'webp', quality: 85, width: 2000, height: 2000 } } } } },
     collections: [
       {
         name: 'projects', label: 'proyectos', label_singular: 'proyecto',
