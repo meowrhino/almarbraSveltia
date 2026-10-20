@@ -126,7 +126,7 @@ vista previa validan con los mismos ficheros (`validar`, en
 `build/proyectos.mjs`, el de oriol). Si se añade un campo, va también en el
 esquema.
 
-**Un proyecto oculto**: en `lists`, `{ "project": "roma", "visible": false }`.
+**Un proyecto oculto**: `"visible": false` en su `project.json`.
 Tiene su página (con `noindex`), pero no sale en el mapa, las listas, el about
 ni el sitemap.
 
@@ -145,9 +145,11 @@ build/paginas.mjs       las plantillas: datos -> HTML, sin tocar el disco
 build/build.mjs         data/ + projects/ -> dist/, validando antes
 build/preview.mjs       la vista previa en el navegador (index.html, Live Server)
 build/serve.mjs         servidor local de dist/
+build/panel.mjs         el config del panel, de schema/; y npm run formato: los JSON como los escribe el panel
 index.html              la vista previa (no se publica)
 schema/                 lo que puede llevar cada JSON (VS Code, build y vista previa)
 admin/                  el panel (Sveltia CMS, en prueba): un formulario encima del mismo JSON (NOTAS-sveltia.md)
+auth/                   el login con GitHub del panel (un Worker, uno para todo el estudio; auth/README.md)
 
 css/transicion.css      la transición de la casa: igual en todas las webs (JAMstack)
 css/style.css           todo el estilo (y el dibujo de la transición: el loader)
@@ -191,9 +193,9 @@ su caché larga sin dársela al HTML.
   "title":    { "es": "ROMA: CIUDAD EN RUINAS…", "en": "ROME: RUINS…" },
   "short":    { "es": "roma" },                // nombre corto para el mapa (si no, el título)
   "text":     { "es": ["primer párrafo", "segundo párrafo"] },
-  "credits":  [                               // uno por persona; el rol por idioma, o un texto si es igual
+  "credits":  [                               // uno por persona; el rol, siempre por idioma
     { "role": { "es": "Modelo", "en": "Model", "ca": "Model" }, "name": "…", "url": "https://…" },
-    { "role": "Make up & hair", "name": "…" }
+    { "role": { "es": "Make up & hair", "en": "Make up & hair", "ca": "Make up & hair" }, "name": "…" }
   ],
   "color":    "#982F0C",                      // si no, el que le toque de site.json
   "cover":    ["10"],                         // la portada: la de la lista y al compartir

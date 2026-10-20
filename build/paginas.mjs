@@ -394,7 +394,7 @@ function aboutPage(projects) {
    rol lo comparten. */
 function credits(list) {
   if (!list?.length) return '';
-  const role = (c) => (typeof c.role === 'string' ? c.role : t(c.role)) || '';
+  const role = (c) => t(c.role) || '';
   const rows = list.map((c, i) => {
     const name = c.url
       ? `<a href="${attr(c.url)}" target="_blank" rel="noopener">${esc(c.name || c.url)}</a>`
@@ -533,7 +533,7 @@ export function sitio(opts) {
   VIEWS = ['mapa', ...LISTS, 'about'];
   cur = lang;
 
-  /* Los ocultos («visible»: false en la lista) tienen su página, pero no
+  /* Los ocultos («visible»: false en su project.json) tienen su página, pero no
      salen en el mapa, en las listas, en el about ni en el sitemap. */
   const { projects } = opts;
   const shown = projects.filter((p) => !p.hidden);

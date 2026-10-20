@@ -20,23 +20,29 @@
     "es": {
       "type": "array",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/parrafo"
       },
       "description": "Los párrafos: [\"primero\", \"segundo\"]. El primero sale también en Google."
     },
     "en": {
       "type": "array",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/parrafo"
       },
       "description": "Los párrafos: [\"primero\", \"segundo\"]. El primero sale también en Google."
     },
     "ca": {
       "type": "array",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/parrafo"
       },
       "description": "Los párrafos: [\"primero\", \"segundo\"]. El primero sale también en Google."
+    }
+  },
+  "$defs": {
+    "parrafo": {
+      "type": "string",
+      "description": "Un párrafo. Dentro, \\n es un salto de línea."
     }
   }
 }

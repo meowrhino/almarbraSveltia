@@ -102,9 +102,6 @@ export function validar(dato, esquema, fichero) {
   return mirar(dato, esquema, []).map(m => `${fichero}: ${m}`);
 }
 
-/** El slug de una entrada de una lista: "roma" o { "project": "roma", "visible": false }. */
-export const slugOf = (entry) => (typeof entry === 'string' ? entry : entry?.project);
-
 const fileOf = (name) => `${String(name).replace(/\.webp$/, '')}.webp`;
 
 /** Las fotos que nombra un project.json, con su ruta (la vista previa
@@ -133,8 +130,7 @@ export function loadProjects(site, { json, size, folders = null }) {
 
   const projects = [];
   for (const [category, { projects: entries = [] }] of Object.entries(lists)) {
-    for (const entry of entries) {
-      const slug = slugOf(entry);
+    for (const slug of entries) {
       if (typeof slug !== 'string') continue;   // lo dice el esquema
       if (projects.some((p) => p.slug === slug)) { errors.push(`«${slug}» está dos veces en las listas de data/site.json`); continue; }
       const at = `projects/${slug}/project.json`;
@@ -176,7 +172,7 @@ export function loadProjects(site, { json, size, folders = null }) {
         ...data,
         slug,
         category,
-        hidden: entry.visible === false,
+        hidden: data.visible === false,
         groups,
         images,
         cover: pick('cover')[0] || images[0],

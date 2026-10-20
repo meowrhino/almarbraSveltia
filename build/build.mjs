@@ -42,6 +42,7 @@
                              créditos, fotos, portada y mapa (ver
                              build/proyectos.mjs) */
 
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   closeSync, cpSync, existsSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, rmSync, statSync, writeFileSync,
@@ -50,7 +51,8 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { OG_H, OG_W, abs, esc, prefix, sitio } from './paginas.mjs';
-import { leerJSON, loadProjects, slugOf, validar, webpSize } from './proyectos.mjs';
+import { config as panel } from './panel.mjs';
+import { leerJSON, loadProjects, validar, webpSize } from './proyectos.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '../..');
 const OUT = join(ROOT, 'dist');
@@ -76,7 +78,7 @@ function read(file, type) {
 const site = read('data/site.json', 'site');
 const about = read('data/about.json', 'about');
 const files = new Map();
-for (const slug of Object.values(site.lists || {}).flatMap((list) => list?.projects || []).map(slugOf)) {
+for (const slug of Object.values(site.lists || {}).flatMap((list) => list?.projects || [])) {
   const at = `projects/${slug}/project.json`;
   if (typeof slug === 'string' && existsSync(join(ROOT, at))) files.set(at, read(at, 'project'));
 }
@@ -218,6 +220,18 @@ rmSync(OUT, { recursive: true, force: true, maxRetries: 5 });
 mkdirSync(OUT, { recursive: true });
 for (const d of ['css', 'js', 'admin']) cpSync(join(ROOT, d), join(OUT, d), { recursive: true });
 for (const f of ['_headers', 'favicon.svg']) cpSync(join(ROOT, f), join(OUT, f));
+/* El config del panel, de schema/ (build/panel.mjs), con el repo al que
+   guarda: el de la Action o, en Workers Builds y en local, el de git. Si
+   falla, se publica igual, sin panel: la web no depende de él. */
+try {
+  const gitRepo = () => /github\.com[:/](.+?)(?:\.git)?$/.exec(execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: ROOT, encoding: 'utf8' }).trim())?.[1];
+  const repoName = process.env.GITHUB_REPOSITORY || gitRepo();
+  if (!repoName) throw new Error('no sé de qué repo de GitHub es esta copia (git remote get-url origin)');
+  const schemas = Object.fromEntries(['site', 'about', 'project'].map((t) => [t, schema(t)]));
+  writeFileSync(join(OUT, 'admin', 'config.yml'), JSON.stringify(panel({ schemas, site, repo: repoName }), null, 2));
+} catch (e) {
+  console.warn(`⚠ el panel (/admin/) no se ha podido preparar: ${e.message}`);
+}
 /* Las fotos de cada proyecto, sin su JSON; las del mapa y las og, después. */
 for (const p of projects) {
   cpSync(join(ROOT, 'projects', p.slug), join(OUT, 'media', p.slug), { recursive: true, filter: (f) => !f.endsWith('.json') });

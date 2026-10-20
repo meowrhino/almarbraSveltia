@@ -1,0 +1,17 @@
+// El login con GitHub del panel (Sveltia CMS): sveltia-cms-auth
+// (github.com/sveltia/sveltia-cms-auth, commit 95733a9811, MIT), tal cual.
+// Uno para todas las webs del estudio, en el Cloudflare de meowrhino.
+// Cómo se despliega: auth/README.md. No es la web: la web es ../wrangler.jsonc.
+{
+  "name": "sveltia-cms-auth",
+  "main": "index.js",
+  "compatibility_date": "2026-10-01",
+  "vars": {
+    // GitHub → Settings → Developer settings → OAuth Apps → la del panel: su «Client ID»
+    "GITHUB_CLIENT_ID": "",
+    // Las webs que pueden entrar (sin https://), separadas por comas. Cada web
+    // nueva con panel, su dominio aquí (y redesplegar).
+    "ALLOWED_DOMAINS": "meowrhino.github.io"
+  }
+  // GITHUB_CLIENT_SECRET no va aquí: npx wrangler secret put GITHUB_CLIENT_SECRET
+}

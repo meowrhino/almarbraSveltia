@@ -14,8 +14,21 @@
       "Pieces developed entirely on a Jacquard TC2 digital loom."
     ]
   },
-  "credits": [],
-  "cover": ["1"],
-  "map": ["1", "5", "6"],
-  "photos": ["1", "2", "3", "4", "5", "6"]
+  "visible": true,
+  "cover": [
+    "1"
+  ],
+  "map": [
+    "1",
+    "5",
+    "6"
+  ],
+  "photos": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ]
 }

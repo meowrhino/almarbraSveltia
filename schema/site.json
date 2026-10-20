@@ -24,10 +24,12 @@
       "type": "string"
     },
     "title": {
+      "title": "nombre de la web",
       "type": "string",
       "description": "El nombre de la web: sale arriba a la izquierda, en la pestaña, en Google y al compartir."
     },
     "url": {
+      "title": "dominio",
       "type": [
         "string",
         "null"
@@ -36,6 +38,7 @@
       "description": "El dominio, cuando lo haya: \"https://almudenagonzalez.com\". Hasta entonces, null, y Google no la indexa. En meowrhino.github.io/almarbra/ no hace falta: lo pone el build."
     },
     "lang": {
+      "title": "idioma de la raíz",
       "enum": [
         "es",
         "en",
@@ -44,6 +47,7 @@
       "description": "El idioma de la raíz de la web; los otros van en /en/ y /ca/."
     },
     "langs": {
+      "title": "idiomas",
       "type": "array",
       "items": {
         "enum": [
@@ -55,19 +59,23 @@
       "description": "Los idiomas de la web."
     },
     "description": {
+      "title": "frase para Google",
       "$ref": "#/$defs/texto",
       "description": "La frase que sale debajo del título en Google y al compartir la web."
     },
     "email": {
+      "title": "email",
       "type": "string",
       "description": "Sale al pie del about. Vacío, no sale."
     },
     "instagram": {
+      "title": "instagram",
       "type": "string",
       "pattern": "^@?[A-Za-z0-9._]*$",
       "description": "El usuario de Instagram, solo el nombre: \"almarbra_\" (con o sin @). Sale al pie del about como @almarbra_. Vacío, no sale."
     },
     "social": {
+      "title": "otras redes",
       "type": "array",
       "items": {
         "type": "string",
@@ -76,6 +84,7 @@
       "description": "Otras redes, la dirección entera: [\"https://vimeo.com/usuario\"]. Salen al pie del about, detrás del Instagram."
     },
     "lists": {
+      "title": "listas",
       "type": "object",
       "additionalProperties": {
         "$ref": "#/$defs/lista"
@@ -83,22 +92,27 @@
       "description": "Las listas del menú (textil, foto…), en orden. Lo que va en cada una, y en qué orden, es lo que sale en la web."
     },
     "menu": {
+      "title": "menú",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "map": {
+          "title": "mapa",
           "$ref": "#/$defs/texto"
         },
         "about": {
+          "title": "about",
           "$ref": "#/$defs/texto"
         },
         "back": {
+          "title": "volver",
           "$ref": "#/$defs/texto"
         }
       },
       "description": "Las demás palabras del menú, por idioma: map (el mapa), about y back (volver)."
     },
     "colors": {
+      "title": "colores",
       "type": "array",
       "items": {
         "type": "string"
@@ -106,6 +120,7 @@
       "description": "Los colores de los proyectos (#hex o nombres CSS), que se reparten en el orden de las listas y vuelven a empezar si hay más proyectos que colores."
     },
     "mix": {
+      "title": "mezcla del mapa",
       "type": "number",
       "minimum": 0,
       "maximum": 100,
@@ -138,36 +153,17 @@
       "additionalProperties": false,
       "properties": {
         "name": {
+          "title": "nombre",
           "$ref": "#/$defs/texto",
           "description": "Su nombre en el menú, por idioma."
         },
         "projects": {
+          "title": "proyectos",
           "type": "array",
-          "description": "Sus proyectos, en el orden en que salen: el nombre de su carpeta en projects/. Para esconder uno sin quitarlo: { \"project\": \"roma\", \"visible\": false }.",
+          "description": "Sus proyectos, en el orden en que salen: el nombre de su carpeta en projects/. Para esconder uno sin quitarlo: «\"visible\": false» en su project.json.",
           "items": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "El nombre de la carpeta del proyecto en projects/."
-              },
-              {
-                "type": "object",
-                "required": [
-                  "project"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "project": {
-                    "type": "string",
-                    "description": "El nombre de la carpeta del proyecto en projects/."
-                  },
-                  "visible": {
-                    "type": "boolean",
-                    "description": "false: tiene su página (para mandarla a quien quieras), pero no sale en el mapa, en las listas ni en Google."
-                  }
-                }
-              }
-            ]
+            "type": "string",
+            "description": "El nombre de la carpeta del proyecto en projects/, entre comillas. Para esconderlo: «\"visible\": false» en su project.json."
           }
         }
       }

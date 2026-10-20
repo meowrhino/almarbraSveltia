@@ -1,7 +1,5 @@
 {
   "$schema": "../../schema/project.json",
-  "_nota": "En la ficha original los títulos ES e EN están intercambiados.",
-  "_borrador": "El título y la sinopsis en catalán: traducción provisional, pendiente de que la revise Almudena.",
   "title": {
     "es": "ROMA: CIUDAD EN RUINAS, IDENTIDAD EN CONSTRUCCIÓN",
     "en": "ROME: RUINS, IDENTITY UNDER CONSTRUCTION",
@@ -26,21 +24,52 @@
       "treball de recerca de textures i lligats de setí desenvolupat en un teler digital Jacquard TC2."
     ]
   },
-  "credits": [],
-  "cover": ["10"],
-  "map": ["2", "3", "5", "6", "11", "12", "15"],
+  "visible": true,
+  "cover": [
+    "10"
+  ],
+  "map": [
+    "2",
+    "3",
+    "5",
+    "6",
+    "11",
+    "12",
+    "15"
+  ],
   "groups": [
     {
       "name": "Laocoonte",
-      "photos": ["1", "2", "3", "4"]
+      "photos": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
     },
     {
       "name": "Rio de la Plata",
-      "photos": ["5", "6", "7", "8", "9"]
+      "photos": [
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ]
     },
     {
       "name": "Virgen",
-      "photos": ["10", "11", "12", "13", "14", "15", "16"]
+      "photos": [
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16"
+      ]
     }
-  ]
+  ],
+  "_borrador": "El título y la sinopsis en catalán: traducción provisional, pendiente de que la revise Almudena.",
+  "_nota": "En la ficha original los títulos ES e EN están intercambiados."
 }

@@ -18,22 +18,27 @@
       "type": "string"
     },
     "title": {
+      "title": "título",
       "$ref": "#/$defs/texto",
       "description": "El título, por idioma. Sale en su página, en las listas, en Google y al compartir."
     },
     "short": {
+      "title": "nombre corto (mapa)",
       "$ref": "#/$defs/texto",
       "description": "Opcional: un nombre corto para el mapa, si el título es largo."
     },
     "text": {
+      "title": "texto",
       "$ref": "#/$defs/parrafos",
       "description": "El texto, por idioma, como lista de párrafos. El primero sale también en Google (si no hay «description»)."
     },
     "description": {
+      "title": "frase para Google",
       "$ref": "#/$defs/texto",
       "description": "Opcional: la frase que sale en Google y al compartir. Si no está, sale el primer párrafo de «text»."
     },
     "credits": {
+      "title": "créditos",
       "type": "array",
       "items": {
         "$ref": "#/$defs/credito"
@@ -41,10 +46,18 @@
       "description": "Los créditos, una persona por línea: { \"role\": { \"es\": \"Fotografía\", \"en\": \"Photography\", \"ca\": \"Fotografia\" }, \"name\": \"…\", \"url\": \"https://…\" }."
     },
     "color": {
+      "title": "color",
       "type": "string",
       "description": "Opcional: su color (#hex o nombre CSS). Si no, el que le toque de «colors» en data/site.json."
     },
+    "visible": {
+      "title": "visible",
+      "type": "boolean",
+      "default": true,
+      "description": "true: se ve. false: tiene su página (para mandarla a quien quieras), pero no sale en el mapa, en las listas ni en Google."
+    },
     "cover": {
+      "title": "portada",
       "type": "array",
       "maxItems": 1,
       "items": {
@@ -55,6 +68,7 @@
       "description": "La portada: la foto de las listas y al compartir. [\"8\"]. Si no está, la primera."
     },
     "map": {
+      "title": "fotos en el mapa",
       "type": "array",
       "items": {
         "type": "string",
@@ -64,6 +78,7 @@
       "description": "Las fotos que salen en el mapa: [\"2\", \"5\"]. Si no está, unas cuantas, repartidas."
     },
     "photos": {
+      "title": "fotos",
       "type": "array",
       "items": {
         "type": "string",
@@ -73,6 +88,7 @@
       "description": "Las fotos de su página, en orden, por su número: [\"1\", \"2\", \"3\"]."
     },
     "groups": {
+      "title": "grupos (en vez de «fotos»)",
       "type": "array",
       "items": {
         "$ref": "#/$defs/grupo"
@@ -104,23 +120,27 @@
         "es": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/parrafo"
           }
         },
         "en": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/parrafo"
           }
         },
         "ca": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/parrafo"
           }
         }
       },
       "description": "Un texto largo en los tres idiomas, cada uno una lista de párrafos: { \"es\": [\"primero\", \"segundo\"], \"en\": […], \"ca\": […] }. Dentro de un párrafo, \\n es un salto de línea. Si falta uno, sale el español."
+    },
+    "parrafo": {
+      "type": "string",
+      "description": "Un párrafo. Dentro, \\n es un salto de línea."
     },
     "foto": {
       "type": "string",
@@ -135,34 +155,17 @@
       "additionalProperties": false,
       "properties": {
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "es": {
-                  "type": "string"
-                },
-                "en": {
-                  "type": "string"
-                },
-                "ca": {
-                  "type": "string"
-                }
-              },
-              "description": "Un texto en los tres idiomas: { \"es\": \"…\", \"en\": \"…\", \"ca\": \"…\" }. Si falta uno, sale el español."
-            }
-          ],
-          "description": "Qué hizo: igual en todos los idiomas (\"Make up & hair\") o por idioma ({ \"es\": \"Fotografía\", \"en\": \"Photography\" })."
+          "title": "qué hizo",
+          "$ref": "#/$defs/texto",
+          "description": "Qué hizo, por idioma: { \"es\": \"Fotografía\", \"en\": \"Photography\", \"ca\": \"Fotografia\" }. Si es igual en todos, el mismo texto tres veces."
         },
         "name": {
+          "title": "nombre",
           "type": "string",
           "description": "Su nombre."
         },
         "url": {
+          "title": "web o instagram",
           "type": "string",
           "pattern": "^https?://",
           "description": "Opcional: su web o su Instagram, la dirección entera."
@@ -177,10 +180,12 @@
       "additionalProperties": false,
       "properties": {
         "name": {
+          "title": "nombre",
           "type": "string",
           "description": "El nombre del grupo, encima de sus fotos."
         },
         "photos": {
+          "title": "fotos",
           "type": "array",
           "items": {
             "type": "string",

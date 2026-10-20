@@ -5,14 +5,63 @@
     "en": "ÁGUEDA",
     "ca": "ÁGUEDA"
   },
-  "text": {},
   "credits": [
-    { "role": { "es": "Fotografía", "en": "Photography", "ca": "Fotografia" }, "name": "Almudena González", "url": "https://www.instagram.com/almarbra_/" },
-    { "role": "Make up & hair", "name": "Melissa Morena", "url": "https://www.instagram.com/bissamorena/" },
-    { "role": { "es": "Estilismo", "en": "Styling", "ca": "Estilisme" }, "name": "Jhonson Camilo", "url": "https://www.instagram.com/papitaa_criolla/" },
-    { "role": { "es": "Modelo", "en": "Model", "ca": "Model" }, "name": "Helen Mariana Vanín", "url": "https://www.instagram.com/helenmarianavanin/" }
+    {
+      "role": {
+        "es": "Fotografía",
+        "en": "Photography",
+        "ca": "Fotografia"
+      },
+      "name": "Almudena González",
+      "url": "https://www.instagram.com/almarbra_/"
+    },
+    {
+      "role": {
+        "es": "Make up & hair",
+        "en": "Make up & hair",
+        "ca": "Make up & hair"
+      },
+      "name": "Melissa Morena",
+      "url": "https://www.instagram.com/bissamorena/"
+    },
+    {
+      "role": {
+        "es": "Estilismo",
+        "en": "Styling",
+        "ca": "Estilisme"
+      },
+      "name": "Jhonson Camilo",
+      "url": "https://www.instagram.com/papitaa_criolla/"
+    },
+    {
+      "role": {
+        "es": "Modelo",
+        "en": "Model",
+        "ca": "Model"
+      },
+      "name": "Helen Mariana Vanín",
+      "url": "https://www.instagram.com/helenmarianavanin/"
+    }
   ],
-  "cover": ["2"],
-  "map": ["2", "3", "5", "7"],
-  "photos": ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+  "visible": true,
+  "cover": [
+    "2"
+  ],
+  "map": [
+    "2",
+    "3",
+    "5",
+    "7"
+  ],
+  "photos": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ]
 }

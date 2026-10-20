@@ -5,15 +5,82 @@
     "en": "VEIN MAGAZINE",
     "ca": "VEIN MAGAZINE"
   },
-  "text": {},
   "credits": [
-    { "role": { "es": "Fotografía", "en": "Photography", "ca": "Fotografia" }, "name": "Almudena González", "url": "https://www.instagram.com/almarbra_/" },
-    { "role": { "es": "Estilismo", "en": "styling", "ca": "Estilisme" }, "name": "Rocco Marvin", "url": "https://www.instagram.com/rocco_marvin/" },
-    { "role": "Make up & hair", "name": "Barbara Mattel", "url": "https://www.instagram.com/barbaramattel/" },
-    { "role": { "es": "Modelo", "en": "Model", "ca": "Model" }, "name": "Dani Lazo", "url": "https://www.instagram.com/danilahozzc/" },
-    { "role": { "es": "Modelo", "en": "Model", "ca": "Model" }, "name": "Alexandrina Graur", "url": "https://www.instagram.com/alexandrina_g/" }
+    {
+      "role": {
+        "es": "Fotografía",
+        "en": "Photography",
+        "ca": "Fotografia"
+      },
+      "name": "Almudena González",
+      "url": "https://www.instagram.com/almarbra_/"
+    },
+    {
+      "role": {
+        "es": "Estilismo",
+        "en": "styling",
+        "ca": "Estilisme"
+      },
+      "name": "Rocco Marvin",
+      "url": "https://www.instagram.com/rocco_marvin/"
+    },
+    {
+      "role": {
+        "es": "Make up & hair",
+        "en": "Make up & hair",
+        "ca": "Make up & hair"
+      },
+      "name": "Barbara Mattel",
+      "url": "https://www.instagram.com/barbaramattel/"
+    },
+    {
+      "role": {
+        "es": "Modelo",
+        "en": "Model",
+        "ca": "Model"
+      },
+      "name": "Dani Lazo",
+      "url": "https://www.instagram.com/danilahozzc/"
+    },
+    {
+      "role": {
+        "es": "Modelo",
+        "en": "Model",
+        "ca": "Model"
+      },
+      "name": "Alexandrina Graur",
+      "url": "https://www.instagram.com/alexandrina_g/"
+    }
   ],
-  "cover": ["12"],
-  "map": ["1", "2", "7", "8", "11", "12", "16"],
-  "photos": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"]
+  "visible": true,
+  "cover": [
+    "12"
+  ],
+  "map": [
+    "1",
+    "2",
+    "7",
+    "8",
+    "11",
+    "12",
+    "16"
+  ],
+  "photos": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16"
+  ]
 }

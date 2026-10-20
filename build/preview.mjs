@@ -15,7 +15,7 @@
    navegador no puede ver qué carpetas hay. */
 
 import { esc, sitio } from './paginas.mjs';
-import { leerJSON, loadProjects, photoSrcs, slugOf, validar, webpSize } from './proyectos.mjs';
+import { leerJSON, loadProjects, photoSrcs, validar, webpSize } from './proyectos.mjs';
 
 const write = (html) => { document.open(); document.write(html); document.close(); };
 
@@ -57,7 +57,7 @@ async function start() {
   const site = await json('data/site.json');
   const about = await json('data/about.json');
   if (!site || !about) return oops('No encuentro los datos', ['Falta data/site.json o data/about.json.']);
-  const slugs = Object.values(site.lists || {}).flatMap((list) => list?.projects || []).map(slugOf).filter((slug) => typeof slug === 'string');
+  const slugs = Object.values(site.lists || {}).flatMap((list) => list?.projects || []).filter((slug) => typeof slug === 'string');
   const files = new Map(await Promise.all(slugs.map(async (slug) => {
     const at = `projects/${slug}/project.json`;
     return [at, await json(at)];

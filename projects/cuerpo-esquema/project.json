@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/project.json",
-  "_borrador": "La sinopsis en catalán: traducción provisional, pendiente de que la revise Almudena. El título se queda en castellano hasta que diga cómo lo quiere.",
   "title": {
     "es": "CUERPO ESQUEMA",
     "en": "THE OUTLINED BODY"
@@ -19,8 +18,19 @@
       "Peces desenvolupades íntegrament en un teler digital Jacquard TC2."
     ]
   },
-  "credits": [],
-  "cover": ["1"],
-  "map": ["1", "2", "3"],
-  "photos": ["1", "2", "3"]
+  "visible": true,
+  "cover": [
+    "1"
+  ],
+  "map": [
+    "1",
+    "2",
+    "3"
+  ],
+  "photos": [
+    "1",
+    "2",
+    "3"
+  ],
+  "_borrador": "La sinopsis en catalán: traducción provisional, pendiente de que la revise Almudena. El título se queda en castellano hasta que diga cómo lo quiere."
 }

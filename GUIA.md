@@ -163,10 +163,10 @@ nombre en el menú (`name`) y los nombres de las carpetas de sus proyectos
 ```
 
 - Para **cambiar el orden**, mueve los nombres.
-- Para **esconder** un proyecto sin borrarlo, cambia su nombre por
-  `{ "project": "roma", "visible": false }`. Sigue teniendo su página (puedes
-  mandar el enlace a quien quieras), pero no sale en el mapa, en las listas ni
-  en Google, y no pierde su sitio: para que vuelva, pones otra vez `"roma"`.
+- Para **esconder** un proyecto sin borrarlo, añade `"visible": false` en su
+  `project.json`. Sigue teniendo su página (puedes mandar el enlace a quien
+  quieras), pero no sale en el mapa, en las listas ni en Google, y no pierde su
+  sitio: para que vuelva, borras esa línea (o pones `true`).
 - Para **quitarlo del todo**, bórralo de la lista (la carpeta se puede quedar).
 - Para **pasarlo de lista**, lo mueves de una a la otra.
 
@@ -205,7 +205,7 @@ Un `project.json` mínimo:
   },
   "credits": [
     { "role": { "es": "Fotografía", "en": "Photography", "ca": "Fotografia" }, "name": "Almudena González", "url": "https://www.instagram.com/almarbra_/" },
-    { "role": "Make up & hair", "name": "Nombre Apellido", "url": "https://www.instagram.com/usuario/" }
+    { "role": { "es": "Make up & hair", "en": "Make up & hair", "ca": "Make up & hair" }, "name": "Nombre Apellido", "url": "https://www.instagram.com/usuario/" }
   ],
   "cover": ["1"],
   "map": ["1", "2", "3"],
@@ -231,10 +231,12 @@ pequeñas del mapa **se hacen solas**: no tienes que hacer nada.
 | `photos` | la galería, en orden | `["1", "2", "3"]` |
 | `groups` | *(en vez de `photos`)* la galería por partes, cada una con su nombre, como en Roma | `[{ "name": "Virgen", "photos": ["10", "11"] }]` |
 | `color` | *(opcional)* su color, si no le toca uno solo | `"#982F0C"` |
+| `visible` | *(opcional)* `false` para esconderlo: tiene su página, pero no sale en el mapa, las listas ni Google | `false` |
 | `description` | *(opcional)* la frase que sale en Google y al compartir | `{ "es": "…", "en": "…", "ca": "…" }` |
 
-En `credits`, el rol (`role`) va por idioma; si es igual en los tres, basta con
-escribirlo una vez: `"role": "Make up & hair"`. El enlace (`url`) es opcional.
+En `credits`, el rol (`role`) va siempre por idioma; si es igual en los tres,
+se escribe tres veces: `{ "es": "Make up & hair", "en": "Make up & hair", "ca":
+"Make up & hair" }`. El enlace (`url`) es opcional.
 
 Las líneas que empiezan por `"_` son notas (por ejemplo `"_borrador"`): no salen
 en la web.
