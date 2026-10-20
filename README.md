@@ -147,6 +147,7 @@ build/preview.mjs       la vista previa en el navegador (index.html, Live Server
 build/serve.mjs         servidor local de dist/
 index.html              la vista previa (no se publica)
 schema/                 lo que puede llevar cada JSON (VS Code, build y vista previa)
+admin/                  el panel (Sveltia CMS, en prueba): un formulario encima del mismo JSON (NOTAS-sveltia.md)
 
 css/transicion.css      la transición de la casa: igual en todas las webs (JAMstack)
 css/style.css           todo el estilo (y el dibujo de la transición: el loader)

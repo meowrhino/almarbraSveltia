@@ -1,0 +1,117 @@
+# Sveltia CMS (https://sveltiacms.app): un formulario encima del mismo JSON
+# de siempre. Cada campo de aquí es uno de schema/; lo que no está aquí y sí
+# en el JSON (las notas «_…») se queda como está.
+backend:
+  name: github
+  repo: meowrhino/almarbraSveltia
+  branch: main
+
+locale: es
+media_folder: projects   # obligatorio arriba; cada proyecto usa su img/
+
+output:
+  omit_empty_optional_fields: true   # un idioma vacío no se escribe
+  json: { indent_size: 2 }
+
+collections:
+  - name: projects
+    label: proyectos
+    label_singular: proyecto
+    description: Cada proyecto es una carpeta de projects/. Para que salga en la web, añádelo también a una lista en «la web».
+    folder: projects
+    path: '{{slug}}/project'
+    format: json
+    extension: json
+    media_folder: img
+    public_folder: img
+    identifier_field: title.es
+    slug: { template: '{{fields.title.es}}', editable: [create] }
+    summary: '{{title.es}}'
+    fields:
+      - { name: $schema, widget: hidden, default: ../../schema/project.json }
+      - name: title
+        label: título
+        widget: object
+        fields: &idiomas
+          - { name: es, widget: string }
+          - { name: en, widget: string, required: false }
+          - { name: ca, widget: string, required: false }
+      - { name: short, label: nombre corto (mapa), widget: object, required: false, fields: *idiomas }
+      - name: text
+        label: texto
+        widget: object
+        required: false
+        fields:
+          - &parrafos { name: es, widget: list, label_singular: párrafo, required: false, field: { name: p, label: párrafo, widget: text } }
+          - { <<: *parrafos, name: en }
+          - { <<: *parrafos, name: ca }
+      - { name: description, label: frase para Google, widget: object, required: false, fields: *idiomas }
+      - name: credits
+        label: créditos
+        widget: list
+        required: false
+        label_singular: persona
+        summary: '{{name}}'
+        fields:
+          # ojo: el panel solo sabe una forma; un rol escrito como texto
+          # («"role": "Set design"») se borra al guardar. Ver NOTAS-sveltia.md
+          - { name: role, label: qué hizo, widget: object, required: false, fields: *idiomas }
+          - { name: name, label: nombre, widget: string }
+          - { name: url, label: web o instagram, widget: string, required: false, pattern: ['^https?://', 'la dirección entera, con https://'] }
+      - { name: color, widget: string, required: false }
+      - &fotos { name: cover, label: portada, widget: list, required: false, hint: 'el número de la foto: 3 es img/3.webp' }
+      - { <<: *fotos, name: map, label: fotos en el mapa }
+      - { <<: *fotos, name: photos, label: fotos, hint: 'en orden, un número por fila' }
+      - name: groups
+        label: grupos (en vez de «fotos»)
+        widget: list
+        required: false
+        summary: '{{name}}'
+        fields:
+          - { name: name, label: nombre, widget: string, required: false }
+          - { <<: *fotos, name: photos, label: fotos, required: true }
+
+  - name: data
+    label: la web
+    files:
+      - name: site
+        label: general y listas
+        file: data/site.json
+        fields:
+          - { name: $schema, widget: hidden, default: ../schema/site.json }
+          - { name: title, label: nombre de la web, widget: string }
+          - { name: url, label: dominio, widget: string, required: false }
+          - { name: lang, label: idioma de la raíz, widget: select, options: [es, en, ca] }
+          - { name: langs, label: idiomas, widget: select, multiple: true, options: [es, en, ca] }
+          - { name: description, label: frase para Google, widget: object, fields: *idiomas }
+          - { name: email, widget: string, required: false }
+          - { name: instagram, widget: string, required: false, hint: solo el usuario, sin @ }
+          - { name: social, label: otras redes, widget: list, required: false, field: { name: url, widget: string } }
+          - name: lists
+            label: listas
+            widget: object
+            fields:
+              - &lista
+                name: textil
+                widget: object
+                fields:
+                  - { name: name, label: nombre, widget: object, fields: *idiomas }
+                  # ojo: { "project": "roma", "visible": false } no lo sabe pintar
+                  - { name: projects, label: proyectos, widget: relation, collection: projects, value_field: '{{slug}}', display_fields: ['{{title.es}}'], search_fields: [title.es], multiple: true, dropdown_threshold: 0 }
+              - { <<: *lista, name: foto }
+          - name: menu
+            widget: object
+            fields:
+              - { name: map, label: mapa, widget: object, fields: *idiomas }
+              - { name: about, widget: object, fields: *idiomas }
+              - { name: back, label: volver, widget: object, fields: *idiomas }
+          - { name: colors, label: colores, widget: list, field: { name: color, widget: string } }
+          - { name: mix, label: mezcla del mapa, widget: number, value_type: int, min: 0, max: 100, required: false }
+      - name: about
+        label: about
+        file: data/about.json
+        fields:
+          - { name: $schema, widget: hidden, default: ../schema/about.json }
+          - { <<: *parrafos, required: true }
+          - { <<: *parrafos, name: en }
+          - { <<: *parrafos, name: ca }

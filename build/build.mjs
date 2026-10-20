@@ -15,7 +15,7 @@
    (dist/en/, dist/ca/…), cada página con sus hreflang.
 
    Más lo que pide un sitio estático: 404.html, sitemap.xml, robots.txt,
-   .nojekyll, _headers y favicon.svg, y una copia de css/, js/ y
+   .nojekyll, _headers y favicon.svg, y una copia de css/, js/, admin/ (el panel) y
    las fotos (dist/media/). dist/ no se commitea: lo publica la Action
    (.github/workflows/deploy.yml).
 
@@ -216,7 +216,7 @@ if (sharp) {
 
 rmSync(OUT, { recursive: true, force: true, maxRetries: 5 });
 mkdirSync(OUT, { recursive: true });
-for (const d of ['css', 'js']) cpSync(join(ROOT, d), join(OUT, d), { recursive: true });
+for (const d of ['css', 'js', 'admin']) cpSync(join(ROOT, d), join(OUT, d), { recursive: true });
 for (const f of ['_headers', 'favicon.svg']) cpSync(join(ROOT, f), join(OUT, f));
 /* Las fotos de cada proyecto, sin su JSON; las del mapa y las og, después. */
 for (const p of projects) {
