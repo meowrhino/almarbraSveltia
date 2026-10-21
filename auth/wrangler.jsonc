@@ -7,7 +7,7 @@
   "main": "index.js",
   "compatibility_date": "2026-10-01",
   "vars": {
-    // GitHub → Settings → Developer settings → OAuth Apps → la del panel: su «Client ID»
+    // GitHub → Settings → Developer settings → GitHub Apps → meowrhino-panel: su «Client ID»
     "GITHUB_CLIENT_ID": "",
     // Las webs que pueden entrar (sin https://), separadas por comas. Cada web
     // nueva con panel, su dominio aquí (y redesplegar).

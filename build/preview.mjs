@@ -34,6 +34,12 @@ async function json(at) {
 /** El ancho y alto de una foto, de sus primeros bytes (no hace falta
     bajarla entera: Live Server entiende Range); undefined si no está. */
 async function size(src) {
+  if (/\.(jpe?g|png)$/i.test(src)) {
+    // una JPG o PNG: entera, que el navegador la abra (y la gire como la cámara)
+    const r = await fetch(src, { cache: 'no-store' }).catch(() => null);
+    if (!r?.ok) return undefined;
+    try { const b = await createImageBitmap(await r.blob()); return { w: b.width, h: b.height }; } catch { return null; }
+  }
   const r = await fetch(src, { cache: 'no-store', headers: { Range: 'bytes=0-29' } }).catch(() => null);
   if (!r?.ok) return undefined;
   const reader = r.body.getReader();

@@ -27,8 +27,12 @@ Cuando falla, la web se queda como estaba. Para arreglarlo:
    - "no encuentro img/3.webp": una foto de `photos` (o de `groups`) que no
      está en `img/`. Pregunta si falta subirla; si no, quítala de `photos` (y
      de `cover` y `map`) y dilo.
-   - "no es un WebP de verdad": la foto no ha pasado por imgToWeb
-     (https://meowrhino.github.io/imgToWeb/); hay que pasarla, no renombrarla.
+   - "no es un WebP de verdad": un archivo .webp que es otra cosa (una JPG
+     renombrada). Hay que pasarla por imgToWeb
+     (https://meowrhino.github.io/imgToWeb/), o dejarla en JPG con su nombre de
+     verdad: el build pasa las JPG y PNG a WebP.
+   - "… y otra foto se llaman igual": `3.jpg` y `3.webp` en la misma carpeta;
+     saldrían las dos como 3.webp. Cambiar el nombre a una (y en `photos`).
    - "en «map», 9 no está entre sus fotos": `cover` y `map` solo pueden nombrar
      fotos que estén en `photos` o `groups`.
    - "la lista … nombra …, y no hay projects/…/project.json": el slug de

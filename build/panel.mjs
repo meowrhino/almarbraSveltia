@@ -17,10 +17,6 @@
    panel no sabe pintar un campo con dos formas («anyOf»): si sale uno,
    config() lo dice y el build publica sin panel. */
 
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-
 /* El Worker del login con GitHub (auth/, NOTAS-sveltia.md): hasta que
    esté desplegado, null, y se entra con un token o con la carpeta local. */
 const AUTH = null;
@@ -60,6 +56,8 @@ function campo(name, s, required, dato, def, path) {
     const items = def(s.items || {});
     const list = { ...f, widget: 'list', ...(s.maxItems != null && { max: s.maxItems }) };
     if (items.enum) return { ...f, widget: 'select', multiple: true, options: items.enum };
+    // fotos ($defs/foto): miniaturas, subir y ordenar arrastrando; guarda el nombre del archivo
+    if (items._def === 'foto') return { ...f, widget: 'image', multiple: true, ...(s.maxItems != null && { max: s.maxItems }) };
     if (items.properties) {
       return { ...list, ...(items.properties.name && { summary: '{{fields.name}}' }), fields: campos(items, def, `${path}.*`) };
     }
@@ -94,7 +92,7 @@ export function config({ schemas, site, repo }) {
         name: 'projects', label: 'proyectos', label_singular: 'proyecto',
         description: 'Cada proyecto es una carpeta de projects/. Para que salga en la web, añádelo también a una lista en «la web».',
         folder: 'projects', path: '{{slug}}/project', format: 'json', extension: 'json',
-        media_folder: 'img', public_folder: 'img',
+        media_folder: 'img', public_folder: '',   // la foto se guarda como "3.webp", sin carpeta
         identifier_field: 'title.es', summary: '{{title.es}}',
         slug: { template: '{{fields.title.es}}', editable: ['create'] },
         fields: de('project', '../../schema/project.json'),
@@ -139,8 +137,12 @@ export function canonico(dato, esquema, def = resolver(esquema)) {
 
 export const texto = (dato) => `${JSON.stringify(dato, null, 2)}\n`;
 
-/* node build/panel.mjs: todos los JSON al formato del panel. */
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+/* node build/panel.mjs: todos los JSON al formato del panel. (Este fichero
+   lo carga también admin/index.html en el navegador: lo de Node, aquí dentro.) */
+if (globalThis.process?.argv?.[1] && import.meta.url === (await import('node:url')).pathToFileURL(process.argv[1]).href) {
+  const { readdirSync, readFileSync, writeFileSync } = await import('node:fs');
+  const { join, resolve } = await import('node:path');
+  const { fileURLToPath } = await import('node:url');
   const ROOT = resolve(fileURLToPath(import.meta.url), '../..');
   const schema = (tipo) => JSON.parse(readFileSync(join(ROOT, 'schema', `${tipo}.json`), 'utf8'));
   const files = [['data/site.json', 'site'], ['data/about.json', 'about'],

@@ -50,7 +50,7 @@ import {
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { OG_H, OG_W, abs, esc, prefix, sitio } from './paginas.mjs';
+import { OG_H, OG_W, abs, esc, prefix, sitio, webp } from './paginas.mjs';
 import { config as panel } from './panel.mjs';
 import { leerJSON, loadProjects, validar, webpSize } from './proyectos.mjs';
 
@@ -95,20 +95,52 @@ if (github) site.url = `https://${owner}.github.io/${repo}/`;
 else if (site.url) site.url = site.url.replace(/\/?$/, '/');
 site.noindex = github || !site.url;
 
+let sharp;
+try { sharp = (await import('sharp')).default; } catch (e) {
+  console.warn(`⚠ sin sharp (${e.code || e.message}): al compartir sale la portada tal cual y el mapa usa las fotos grandes. Se arregla con: npm ci`);
+}
+
+const fresh = (out, srcs) => existsSync(out) && statSync(out).mtimeMs >= Math.max(...srcs.map((src) => statSync(join(ROOT, src)).mtimeMs));
+
+/* Las JPG y PNG de img/ (las que sube el panel desde Safari, que no sabe
+   hacer WebP, o las que llegan a mano) se publican en WebP, como las de
+   imgToWeb: giradas como las hizo la cámara, 2000 px como mucho y q85, en
+   .cache/webp/. Su ancho y alto son los del WebP. */
+const folders = readdirSync(join(ROOT, 'projects'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
+const webps = new Map();   // projects/<slug>/img/X.jpg → .cache/webp/<slug>/X.webp
+for (const slug of folders) {
+  const dir = join(ROOT, 'projects', slug, 'img');
+  for (const f of existsSync(dir) ? readdirSync(dir).filter((x) => /\.(jpe?g|png)$/i.test(x)) : []) {
+    const src = `projects/${slug}/img/${f}`;
+    if (!sharp) fail(`${src} está en ${f.split('.').pop().toUpperCase()}: para publicarla en WebP hace falta sharp (npm ci)`);
+    const out = join(ROOT, '.cache', 'webp', slug, f.replace(/\.\w+$/, '.webp'));
+    try {
+      if (!fresh(out, [src])) {
+        mkdirSync(dirname(out), { recursive: true });
+        await sharp(join(ROOT, src)).rotate().resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true }).webp({ quality: 85 }).toFile(out);
+      }
+      webps.set(src, out);
+    } catch { /* no se abre: lo dice la validación */ }
+  }
+}
+/** El archivo de una foto que se lee (el WebP hecho, si era JPG o PNG). */
+const input = (src) => webps.get(src) || join(ROOT, src);
+
 /* ── validar ─────────────────────────────────────────────────────── */
 
 const { projects, errors, warnings } = loadProjects(site, {
   json: (at) => files.get(at),
   size(src) {
-    const file = join(ROOT, src);
-    if (!existsSync(file)) return undefined;
+    if (!existsSync(join(ROOT, src))) return undefined;
+    if (/\.(jpe?g|png)$/i.test(src) && !webps.has(src)) return null;
+    const file = input(src);
     const b = Buffer.alloc(30);
     const fd = openSync(file, 'r');
     readSync(fd, b, 0, 30, 0);
     closeSync(fd);
     return webpSize(b);
   },
-  folders: readdirSync(join(ROOT, 'projects'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name),
+  folders,
 });
 
 for (const w of warnings) console.warn(`⚠ ${w}`);
@@ -152,22 +184,16 @@ const MOSAIC = 6;    // portadas en la og de la portada y de cada lista
 const MINI = 600;
 const WHITE = { r: 255, g: 255, b: 255 };
 
-let sharp;
-try { sharp = (await import('sharp')).default; } catch (e) {
-  console.warn(`⚠ sin sharp (${e.code || e.message}): al compartir sale la portada tal cual y el mapa usa las fotos grandes. Se arregla con: npm ci`);
-}
-
-const fresh = (out, srcs) => existsSync(out) && statSync(out).mtimeMs >= Math.max(...srcs.map((src) => statSync(join(ROOT, src)).mtimeMs));
 
 /** La og de `srcs` (una portada, o varias en fila) en .cache/og/. */
 async function makeOg(srcs) {
   const key = createHash('sha1').update(srcs.join('|')).digest('hex').slice(0, 12);
   const cached = join(ROOT, '.cache', 'og', `${key}.jpg`);
   if (fresh(cached, srcs)) return cached;
-  let picture = join(ROOT, srcs[0]);
+  let picture = input(srcs[0]);
   if (srcs.length > 1) {
     // cada portada a 440 de alto con 12 px blancos a cada lado, en fila
-    const tiles = await Promise.all(srcs.map((src) => sharp(join(ROOT, src)).resize({ height: 440 }).flatten({ background: WHITE })
+    const tiles = await Promise.all(srcs.map((src) => sharp(input(src)).resize({ height: 440 }).flatten({ background: WHITE })
       .extend({ left: 12, right: 12, background: WHITE }).png().toBuffer({ resolveWithObject: true })));
     let left = 0;
     picture = await sharp({ create: { width: tiles.reduce((w, t) => w + t.info.width, 0), height: 440, channels: 3, background: WHITE } })
@@ -181,10 +207,10 @@ async function makeOg(srcs) {
 
 /** La foto pequeña del mapa de `image` en .cache/mapa/<slug>/. */
 async function makeMini(image) {
-  const out = join(ROOT, '.cache', 'mapa', image.src.split('/')[1], image.file);
+  const out = join(ROOT, '.cache', 'mapa', image.src.split('/')[1], webp(image.file));
   if (fresh(out, [image.src])) return;
   mkdirSync(dirname(out), { recursive: true });
-  await sharp(join(ROOT, image.src)).resize({ width: Math.min(MINI, image.w) }).webp({ quality: 85 }).toFile(out);
+  await sharp(input(image.src)).resize({ width: Math.min(MINI, image.w) }).webp({ quality: 85 }).toFile(out);
 }
 
 const ogWanted = new Map();     // su ruta en dist/ → las fotos de las que sale
@@ -234,8 +260,9 @@ try {
 }
 /* Las fotos de cada proyecto, sin su JSON; las del mapa y las og, después. */
 for (const p of projects) {
-  cpSync(join(ROOT, 'projects', p.slug), join(OUT, 'media', p.slug), { recursive: true, filter: (f) => !f.endsWith('.json') });
+  cpSync(join(ROOT, 'projects', p.slug), join(OUT, 'media', p.slug), { recursive: true, filter: (f) => !/\.(json|jpe?g|png)$/i.test(f) });
 }
+for (const [src, out] of webps) cpSync(out, join(OUT, webp(src).replace(/^projects\//, 'media/')));
 
 const web = sitio({ site, about, projects, version, ...images });
 const { LANGS, LISTS, paths, listed } = web;
@@ -249,7 +276,7 @@ for (const l of LANGS) {
 }
 
 /* Las imágenes que ha hecho sharp, de .cache/ a dist/. */
-for (const src of miniDone) cpSync(join(ROOT, '.cache', 'mapa', src.split('/')[1], src.split('/').pop()), join(OUT, src.replace(/^projects\//, 'media/').replace(/\/img\//, '/mapa/')));
+for (const src of miniDone) cpSync(join(ROOT, '.cache', 'mapa', src.split('/')[1], webp(src.split('/').pop())), join(OUT, webp(src).replace(/^projects\//, 'media/').replace(/\/img\//, '/mapa/')));
 for (const [out, cached] of ogDone) cpSync(cached, join(OUT, out));
 
 writeFileSync(join(OUT, '404.html'), web.notFound());

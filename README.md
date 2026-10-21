@@ -135,7 +135,7 @@ ni el sitemap.
 ```
 projects/<slug>/        un proyecto, todo junto
   project.json                     título, texto, créditos, fotos, portada, mapa
-  img/1.webp img/2.webp …          sus fotos, tal cual salen de imgToWeb
+  img/1.webp img/IMG_4032.jpg …    sus fotos: de imgToWeb, del panel, o JPG/PNG (el build las pasa a WebP)
 
 data/site.json          título, url, idiomas, listas, menú, colores, contacto y mezcla
 data/about.json         el texto del about
@@ -198,21 +198,23 @@ su caché larga sin dársela al HTML.
     { "role": { "es": "Make up & hair", "en": "Make up & hair", "ca": "Make up & hair" }, "name": "…" }
   ],
   "color":    "#982F0C",                      // si no, el que le toque de site.json
-  "cover":    ["10"],                         // la portada: la de la lista y al compartir
-  "map":      ["2", "3", "5"],                // las del mapa
-  "photos":   ["1", "2", "3"]                 // la galería, en este orden
+  "cover":    ["10.webp"],                    // la portada: la de la lista y al compartir
+  "map":      ["2.webp", "3.webp"],           // las del mapa
+  "photos":   ["1.webp", "IMG_4032.jpg"]      // la galería, en este orden
 }
 ```
 
-- Las fotos se nombran por **su número**, sin `.webp` (todas lo son): `"3"` es
-  `img/3.webp`. El orden de `photos` es el de la galería: para reordenar,
-  se mueven en la lista; para quitar una, se borra de la lista.
-- El ancho y el alto **no se escriben**: el build los lee del propio `.webp`.
+- Las fotos se nombran por **el nombre de su archivo** en `img/` (`"3.webp"`,
+  `"IMG_4032.jpg"`): es lo que escribe el panel al subirlas (en esta copia de
+  laboratorio; en las webs sin panel, por número). Las JPG y PNG las publica el
+  build en WebP (giradas como la cámara, ≤ 2000 px, q85, en `.cache/webp/`).
+  El orden de `photos` es el de la galería.
+- El ancho y el alto **no se escriben**: el build los lee de la foto que publica.
 - `cover` y `map` tienen que estar entre las fotos; si no, el build para y
   dice cuál. Sin `cover`, la primera foto. Sin `map`, va la portada y cinco
   más, repartidas por la galería.
 - Por grupos (Roma, en tres piezas), `groups` en vez de `photos`:
-  `"groups": [{ "name": "Laocoonte", "photos": ["1", "2", …] }, …]`.
+  `"groups": [{ "name": "Laocoonte", "photos": ["1.webp", "2.webp", …] }, …]`.
 - **Los créditos**: una lista, una persona por línea, con su enlace. Dos
   seguidas con el mismo rol lo comparten en la web (salen una debajo de otra).
 - **Los textos largos** (`text`, y el about) son una **lista de párrafos**.

@@ -12,6 +12,44 @@ Cuando guardas un cambio, la web se actualiza sola en **2 o 3 minutos**. Si te
 equivocas en algo, la web **no se rompe**: se queda como estaba hasta que lo
 arregles (abajo, en *Si algo va mal*).
 
+> **O con el panel**: lo mismo, con formularios en vez de archivos (punto
+> 0b). Los dos tocan los mismos archivos: usa el que te vaya mejor.
+
+---
+
+## 0b. El panel: tu web con formularios
+
+En **tuweb.com/admin/** tienes un panel: cada proyecto es una ficha con sus
+campos (título, texto, fotos…), y al pulsar **Guardar** se publica, como con VS
+Code. Hay dos maneras de entrar:
+
+**Desde cualquier sitio** (lo normal): **Iniciar sesión con GitHub**. Antes,
+una sola vez, deja entrar al panel en tu web: en
+<https://github.com/apps/meowrhino-panel> pulsa **Install** → **Only select
+repositories** → el repo de tu web → **Install**. Luego, en el panel,
+«Iniciar sesión con GitHub» y di que sí. Cada vez que guardas, el panel hace
+el commit por ti; en 2-3 minutos está en la web.
+
+> El panel solo puede tocar el repo que elegiste, y el permiso es tuyo: lo
+> quitas cuando quieras en GitHub → *Settings* → *Applications*. Tu contraseña la
+> escribes siempre en github.com, nunca en el panel.
+
+**Desde tu ordenador, con VS Code** (sin iniciar sesión), en **Chrome** (en
+Safari no va):
+
+1. **Sync** (⟳) y **Go Live**, como en el punto 2.
+2. En la dirección que se abre, cambia el final por `/admin/` (por ejemplo
+   `http://127.0.0.1:5500/admin/`).
+3. **Trabajar con un repositorio local** → elige la carpeta de tu web (la que
+   abres en VS Code). Solo la primera vez: luego Chrome se acuerda.
+4. Cambia lo que quieras y pulsa **Guardar**: se guarda en tu ordenador.
+5. Para publicarlo, en VS Code: **Commit** y **Sync Changes** (punto 2).
+
+**Las fotos en el panel**: en la ficha, arrastra las fotos a «fotos» (o pulsa
+*Explorar*); se ordenan arrastrándolas. Pueden ser JPG del móvil: la web las
+pasa a WebP sola. Para la portada y las del mapa, elígelas en «portada» y
+«fotos en el mapa».
+
 ---
 
 ## 0. Antes de empezar (solo la primera vez)
@@ -112,12 +150,12 @@ comas:
 
 ### Cambiar qué fotos salen en el mapa, o la portada
 
-En su `project.json`, por el **número** de la foto (`"5"` es la `5.webp` de su
-carpeta `img/`):
+En su `project.json`, por el **nombre del archivo** de la foto, tal cual está en
+su carpeta `img/` (`"5.webp"`, `"IMG_4032.jpg"`):
 
 ```json
-"cover": ["8"],
-"map": ["1", "3", "5", "8"],
+"cover": ["8.webp"],
+"map": ["1.webp", "3.webp", "5.webp", "8.webp"],
 ```
 
 - `cover` (portada): la foto que sale en la lista y cuando alguien comparte el
@@ -126,22 +164,22 @@ carpeta `img/`):
 
 ### Cambiar el orden de las fotos, o quitar una
 
-En `photos`, el orden es el de la galería. Para cambiarlo, mueve los números;
+En `photos`, el orden es el de la galería. Para cambiarlo, mueve los nombres;
 para quitar una, bórrala de la lista (la foto puede quedarse en `img/`, no
 pasa nada):
 
 ```json
-"photos": ["1", "2", "4", "3", "5"]
+"photos": ["1.webp", "2.webp", "4.webp", "3.webp", "5.webp"]
 ```
 
 ### Añadir fotos a un proyecto
 
-1. Pásalas por imgToWeb. **Ojo**: imgToWeb las numera desde el 1. Si el
-   proyecto ya tiene 16 fotos, cámbiales el nombre a 17, 18… antes de subirlas,
-   o pasa por imgToWeb **todas** las fotos del proyecto otra vez (en el orden
-   que quieras) y súbelas todas, sustituyendo las de antes.
-2. Súbelas a su carpeta `img/`.
-3. Añade sus números a `photos` en el `project.json`.
+Lo más fácil es el panel (punto 0b): arrastrarlas a la ficha. Con VS Code:
+
+1. Súbelas a su carpeta `img/`. Pueden ser WebP (de imgToWeb) o JPG y PNG (del
+   móvil, de la cámara): la web las pasa a WebP al publicar. Dos fotos no se
+   pueden llamar igual (`3.jpg` y `3.webp`).
+2. Añade sus nombres a `photos` en el `project.json`: `"IMG_4032.jpg"`.
 
 ### Cambiar el orden de los proyectos, o esconder uno
 
@@ -181,6 +219,12 @@ nombre en el menú (`name`) y los nombres de las carpetas de sus proyectos
 
 ## 4. Añadir un proyecto nuevo
 
+**Con el panel**: «proyectos» → **Nuevo** → título, texto y fotos → Guardar.
+Luego, en «la web» → «general y listas», elígelo en la lista donde quieras que
+salga (textil o foto) y Guardar. Hasta que no está en una lista, no sale.
+
+**Con VS Code**:
+
 1. **Las fotos**: pásalas por imgToWeb en el orden en que quieras que salgan
    (puedes arrastrarlas para ordenarlas) y descarga el zip.
 2. **La carpeta**: en VS Code, **copia la carpeta de otro proyecto** (por
@@ -207,9 +251,9 @@ Un `project.json` mínimo:
     { "role": { "es": "Fotografía", "en": "Photography", "ca": "Fotografia" }, "name": "Almudena González", "url": "https://www.instagram.com/almarbra_/" },
     { "role": { "es": "Make up & hair", "en": "Make up & hair", "ca": "Make up & hair" }, "name": "Nombre Apellido", "url": "https://www.instagram.com/usuario/" }
   ],
-  "cover": ["1"],
-  "map": ["1", "2", "3"],
-  "photos": ["1", "2", "3", "4"]
+  "cover": ["1.webp"],
+  "map": ["1.webp", "2.webp", "3.webp"],
+  "photos": ["1.webp", "2.webp", "3.webp", "4.webp"]
 }
 ```
 
@@ -226,10 +270,10 @@ pequeñas del mapa **se hacen solas**: no tienes que hacer nada.
 | `short` | *(opcional)* un nombre corto para el mapa | `{ "es": "roma" }` |
 | `text` | el texto, lista de párrafos por idioma | `{ "es": ["Uno.", "Dos."] }` |
 | `credits` | quién hizo qué: una persona por línea | ver arriba |
-| `cover` | la portada: la foto de la lista y de compartir | `["8"]` |
-| `map` | las fotos del mapa | `["1", "3", "5"]` |
-| `photos` | la galería, en orden | `["1", "2", "3"]` |
-| `groups` | *(en vez de `photos`)* la galería por partes, cada una con su nombre, como en Roma | `[{ "name": "Virgen", "photos": ["10", "11"] }]` |
+| `cover` | la portada: la foto de la lista y de compartir | `["8.webp"]` |
+| `map` | las fotos del mapa | `["1.webp", "3.webp"]` |
+| `photos` | la galería, en orden, por el nombre de cada archivo de `img/` | `["1.webp", "IMG_4032.jpg"]` |
+| `groups` | *(en vez de `photos`)* la galería por partes, cada una con su nombre, como en Roma | `[{ "name": "Virgen", "photos": ["10.webp", "11.webp"] }]` |
 | `color` | *(opcional)* su color, si no le toca uno solo | `"#982F0C"` |
 | `visible` | *(opcional)* `false` para esconderlo: tiene su página, pero no sale en el mapa, las listas ni Google | `false` |
 | `description` | *(opcional)* la frase que sale en Google y al compartir | `{ "es": "…", "en": "…", "ca": "…" }` |

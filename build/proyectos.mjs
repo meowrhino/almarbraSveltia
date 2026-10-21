@@ -102,7 +102,12 @@ export function validar(dato, esquema, fichero) {
   return mirar(dato, esquema, []).map(m => `${fichero}: ${m}`);
 }
 
-const fileOf = (name) => `${String(name).replace(/\.webp$/, '')}.webp`;
+/* Una foto se nombra por su archivo de img/ ("3.webp", "IMG_4032.jpg"); sin
+   extensión, es un .webp ("3", como en las webs sin panel). Las JPG y PNG
+   (del panel en Safari, o subidas a mano) las pasa a WebP el build. */
+export const FOTO = /\.(webp|jpe?g|png)$/i;
+const fileOf = (name) => (/\.\w+$/.test(String(name)) ? String(name) : `${name}.webp`);
+const baseOf = (name) => String(name).replace(/\.\w+$/, '');
 
 /** Las fotos que nombra un project.json, con su ruta (la vista previa
     las pide antes de leer los proyectos). */
@@ -149,21 +154,26 @@ export function loadProjects(site, { json, size, folders = null }) {
 
       const image = (name) => {
         const file = fileOf(name);
+        if (!FOTO.test(file)) { errors.push(`projects/${slug}: img/${file} no es una foto que sepa usar la web (WebP, JPG o PNG)`); return null; }
         const src = `projects/${slug}/img/${file}`;
         const wh = size(src);
         if (wh === undefined) { errors.push(`projects/${slug}: no encuentro img/${file}`); return null; }
-        if (!wh) { errors.push(`projects/${slug}: img/${file} no es un WebP de verdad (pásala por imgToWeb)`); return null; }
-        return { name: file.replace(/\.webp$/, ''), file, src, ...wh };
+        if (!wh) { errors.push(`projects/${slug}: img/${file} no es ${/\.webp$/i.test(file) ? 'un WebP de verdad (pásala por imgToWeb, o súbela en JPG)' : 'una foto que se pueda abrir'}`); return null; }
+        return { name: baseOf(file), file, src, ...wh };
       };
       /* Las fotos van en «photos», o por grupos en «groups» (Roma). */
       const groups = list(data.groups, 'groups').concat(data.groups ? [] : [{ name: null, photos: data.photos }])
         .map((g) => ({ name: g.name, images: list(g.photos, 'photos').map(image).filter(Boolean) }));
       const images = groups.flatMap((g) => g.images);
       if (!images.length) errors.push(`projects/${slug}: no tiene fotos`);
+      /* "3.jpg" y "3.webp" saldrían las dos como 3.webp: una sola. */
+      for (const [i, a] of images.entries()) {
+        if (images.slice(0, i).some((b) => b.name === a.name && b.file !== a.file)) errors.push(`projects/${slug}: img/${a.file} y otra foto se llaman igual (${a.name}); cámbiale el nombre a una`);
+      }
 
       /* Las de «cover» y «map» tienen que estar entre sus fotos. */
       const pick = (field) => [].concat(data[field] || []).map((name) => {
-        const found = images.find((i) => i.name === String(name).replace(/\.webp$/, ''));
+        const found = images.find((i) => i.name === baseOf(name));
         if (!found) errors.push(`projects/${slug}: en «${field}», ${name} no está entre sus fotos`);
         return found;
       }).filter(Boolean);

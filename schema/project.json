@@ -61,31 +61,25 @@
       "type": "array",
       "maxItems": 1,
       "items": {
-        "type": "string",
-        "pattern": "^[0-9]+$",
-        "description": "El número de la foto, sin .webp y entre comillas: \"3\" es img/3.webp."
+        "$ref": "#/$defs/foto"
       },
-      "description": "La portada: la foto de las listas y al compartir. [\"8\"]. Si no está, la primera."
+      "description": "La portada: la foto de las listas y al compartir. [\"8.webp\"]. Si no está, la primera."
     },
     "map": {
       "title": "fotos en el mapa",
       "type": "array",
       "items": {
-        "type": "string",
-        "pattern": "^[0-9]+$",
-        "description": "El número de la foto, sin .webp y entre comillas: \"3\" es img/3.webp."
+        "$ref": "#/$defs/foto"
       },
-      "description": "Las fotos que salen en el mapa: [\"2\", \"5\"]. Si no está, unas cuantas, repartidas."
+      "description": "Las fotos que salen en el mapa: [\"2.webp\", \"5.webp\"]. Si no está, unas cuantas, repartidas."
     },
     "photos": {
       "title": "fotos",
       "type": "array",
       "items": {
-        "type": "string",
-        "pattern": "^[0-9]+$",
-        "description": "El número de la foto, sin .webp y entre comillas: \"3\" es img/3.webp."
+        "$ref": "#/$defs/foto"
       },
-      "description": "Las fotos de su página, en orden, por su número: [\"1\", \"2\", \"3\"]."
+      "description": "Las fotos de su página, en orden, por su nombre de archivo: [\"1.webp\", \"2.webp\", \"IMG_4032.jpg\"]."
     },
     "groups": {
       "title": "grupos (en vez de «fotos»)",
@@ -144,8 +138,8 @@
     },
     "foto": {
       "type": "string",
-      "pattern": "^[0-9]+$",
-      "description": "El número de la foto, sin .webp y entre comillas: \"3\" es img/3.webp."
+      "pattern": "^[^/\\\\]+\\.(webp|jpe?g|png|WEBP|JPE?G|PNG)$",
+      "description": "El nombre del archivo, tal cual está en img/: \"3.webp\", \"IMG_4032.jpg\". Las JPG y PNG las pasa a WebP la web al publicar."
     },
     "credito": {
       "type": "object",
@@ -188,11 +182,9 @@
           "title": "fotos",
           "type": "array",
           "items": {
-            "type": "string",
-            "pattern": "^[0-9]+$",
-            "description": "El número de la foto, sin .webp y entre comillas: \"3\" es img/3.webp."
+            "$ref": "#/$defs/foto"
           },
-          "description": "Sus fotos, en orden: [\"1\", \"2\"]."
+          "description": "Sus fotos, en orden: [\"1.webp\", \"2.webp\"]."
         }
       }
     }

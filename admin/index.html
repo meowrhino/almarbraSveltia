@@ -1,14 +1,36 @@
 <!doctype html>
 <!-- El panel (Sveltia CMS) encima del mismo JSON: lee y escribe data/*.json y
-     projects/<slug>/project.json. Qué campos enseña: config.yml, al lado. -->
+     projects/<slug>/project.json. Qué campos enseña: lo dice schema/, y lo
+     traduce build/panel.mjs. -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>panel · almudena gonzalez</title>
+<script>
+  window.CMS_MANUAL_INIT = true;
+  /* Go Live (VS Code) recarga la página cada vez que se guarda un archivo, y el
+     panel guarda archivos: aquí no se recarga. Su aviso llega por un WebSocket
+     en «…/ws»; el panel no usa ninguno. */
+  const WS = window.WebSocket;
+  window.WebSocket = function (url, protocols) { return /\/ws$/.test(url) ? {} : new WS(url, protocols); };
+</script>
+<script src="https://unpkg.com/@sveltia/cms@0.229.0/dist/sveltia-cms.js"></script>
+<script type="module">
+  /* Publicada, el config lo escribe el build (config.yml, al lado). Con Go Live
+     no hay build: se hace aquí, con lo mismo (schema/ y build/panel.mjs), y se
+     entra con «Trabajar con un repositorio local». */
+  if ((await fetch('config.yml', { method: 'HEAD', cache: 'no-store' })).ok) CMS.init();
+  else {
+    const { config } = await import('../build/panel.mjs');
+    const leer = (f) => fetch(`../${f}`, { cache: 'no-store' }).then((r) => r.json());
+    const [site, about, project, datos] = await Promise.all([
+      leer('schema/site.json'), leer('schema/about.json'), leer('schema/project.json'), leer('data/site.json')]);
+    CMS.init({ config: { load_config_file: false, ...config({ schemas: { site, about, project }, site: datos, repo: 'tu-cuenta/tu-web' }) } });
+  }
+</script>
 </head>
 <body>
-<script src="https://unpkg.com/@sveltia/cms@0.229.0/dist/sveltia-cms.js"></script>
 </body>
 </html>

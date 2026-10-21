@@ -67,7 +67,9 @@ const tr = (field, render = esc) => {
    web se sirven desde media/<slug>/ (ahí las copia el build), aparte de
    las páginas: así _headers les da su caché larga sin tocar el HTML. En
    la vista previa, donde están. */
-const pub = (src) => (preview ? src : src.replace(/^projects\//, 'media/'));
+/** Una JPG o PNG se publica en WebP (la hace el build). */
+export const webp = (src) => src.replace(/\.(jpe?g|png)$/i, '.webp');
+const pub = (src) => (preview ? src : webp(src).replace(/^projects\//, 'media/'));
 
 /* De cada foto hay una sola, la de imgToWeb (2000 px de lado largo).
    El mapa, que las enseña pequeñas y a docenas, usa las suyas: las hace
