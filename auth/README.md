@@ -46,8 +46,9 @@ los puede lanzar Claude con su sí, cuando `npx wrangler login` esté hecho.
    - **Expire user authorization tokens**: desmarcado (el panel no sabe renovarlos).
    - **Request user authorization (OAuth) during installation**: desmarcado.
    - Webhook → **Active**: desmarcado.
-   - Permissions → Repository permissions → **Contents: Read and write**
-     (Metadata: Read-only se pone sola). Nada más.
+   - Permissions → Repository permissions → **Contents: Read and write** y
+     **Pull requests: Read and write** (los borradores del panel son pull
+     requests). Metadata: Read-only se pone sola. Nada más.
    - Where can this GitHub App be installed: **Any account**.
    - *Create GitHub App*. Copia el **Client ID** (empieza por `Iv`); luego
      *Generate a new client secret* y copia el **secret** (solo se ve una vez).

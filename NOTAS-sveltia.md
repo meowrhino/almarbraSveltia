@@ -41,7 +41,7 @@ Worker, `auth/`), o un token pegado a mano, o el modo local (sin GitHub).
 | Fotos | **por nombre de archivo**: subir, miniaturas y ordenar en el panel; el build pasa JPG/PNG a WebP |
 | Modo local con Go Live | **hecho** (sin login; solo Chrome/Edge) |
 | Login con GitHub | **preparado** en `auth/` (GitHub App) y **sin desplegar**: falta el paso cero y los pasos de manu |
-| Webs grandes (1.425 eventos) | va bien en local; el resto, **solo si un cliente lo pide** |
+| Webs grandes (1.425 eventos) | va bien en local; la carga desde GitHub y los borradores, **en cuanto haya login** |
 | Versión de Sveltia | fija en **0.229.0**: subirla a mano cada pocos meses, probando antes aquí |
 
 ## 1. Una sola forma por campo
@@ -155,7 +155,7 @@ Lo que sirvió:
   - En Workers Builds no hay cron: una Action con cron que lance el build por
     la API de Cloudflare, o un Worker con Cron Trigger. Sin probar.
 
-**Sin probar, solo si un cliente lo pide** (decisión de manu):
+**Pendiente, en cuanto funcione el login** (con la agenda regenerada en una rama temporal, que se borra después):
 
 - la primera carga desde GitHub con ~1.400 archivos;
 - los borradores con revisión (`publish_mode: editorial_workflow`): solo con
