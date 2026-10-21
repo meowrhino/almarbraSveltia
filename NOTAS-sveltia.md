@@ -1,9 +1,63 @@
 # Sveltia CMS encima del JSON de almarbra (laboratorio, 20–21/10/2026)
 
 almarbraSveltia es una copia de almarbra para probar un panel (Sveltia CMS) en
-las webs del estudio. **Es un experimento**: se usará a veces en una web para
-probar. No entra en la receta y no cambia JAMstack (decidido por manu el
-21/10/2026).
+las webs del estudio.
+
+## Dónde lo dejamos (21/10/2026): aparcado
+
+**Decisión de manu**: de momento, ningún CMS más que **VS Code y los JSON**.
+Montar el login le pareció demasiado complicado. El panel queda aparcado aquí
+por si algún día se retoma, desde este repo o desde JAMstack (`receta.md`, lo
+que está abierto).
+
+Qué funciona y está probado: todo menos el login con GitHub.
+
+- Escribe nuestro JSON: guardar cambia solo la línea tocada.
+- El config sale de `schema/`.
+- Fotos con subida, miniaturas y JPG/PNG pasadas a WebP.
+- Modo local con Go Live.
+- 1.425 eventos van bien en local.
+
+Dónde se paró el login:
+
+1. Verificación en dos pasos en GitHub y Cloudflare: **hecha**.
+2. **Worker desplegado**: `sveltia-cms-auth` en el Cloudflare de
+   manuellatourf@gmail.com, https://sveltia-cms-auth.manuellatourf.workers.dev,
+   con `GITHUB_CLIENT_ID` = `Iv23liZpRAHnCwZtpL9d` y `ALLOWED_DOMAINS` =
+   `meowrhino.github.io`. Comprobado que lleva a GitHub y rechaza otros dominios.
+3. **GitHub App `meowrhino-panel`** creada en la cuenta meowrhino (Contents y
+   Pull requests: Read and write; sin webhook; tokens sin caducidad) e
+   **instalada solo en `meowrhino/almarbraSveltia`**.
+4. El panel publicado ya apunta al Worker (`const AUTH` en `build/panel.mjs`).
+5. **Lo que falló**: en Brave, la ventanita del login se quedaba en
+   `about:blank` (seguramente Shields). Después sí se abrió y GitHub dejó
+   entrar, pero al cambiar el código por el token GitHub contestó
+   `incorrect_client_credentials`: el secret guardado en el Worker no era el de
+   la app.
+
+Para retomarlo:
+
+1. En la app (https://github.com/settings/apps/meowrhino-panel), *Generate a
+   new client secret*.
+2. En `auth/`, `npx wrangler secret put GITHUB_CLIENT_SECRET` y pegarlo.
+3. Probar en un navegador sin bloqueos (Chrome o Safari, o Brave con Shields
+   desactivado en meowrhino.github.io).
+4. Después, lo que quedaba: los borradores (`publish_mode: editorial_workflow`)
+   y la primera carga de ~1.400 archivos desde GitHub, regenerando la agenda en
+   una rama temporal con el parche `agenda-1400.patch` (si sigue en la carpeta
+   de notas; si no, `build/agenda-falsa.mjs` se rehace en 40 líneas, §6).
+
+Si no se retoma, se puede borrar lo que quedó montado:
+
+- el Worker: `npx wrangler delete` en `auth/`;
+- la GitHub App: en su página, *Advanced* → *Delete GitHub App*.
+
+Mientras sigan, no hacen nada: el Worker solo da tokens a
+`meowrhino.github.io`, y la app solo puede tocar este repo.
+
+---
+
+Lo de abajo es el estado del laboratorio, tal como quedó.
 
 El panel está en `/admin/`. Es un formulario que lee y escribe los mismos
 `data/site.json`, `data/about.json` y `projects/<slug>/project.json`, sin
@@ -40,7 +94,7 @@ Worker, `auth/`), o un token pegado a mano, o el modo local (sin GitHub).
 | Proyecto nuevo + `lists` | **sí**, en dos pasos |
 | Fotos | **por nombre de archivo**: subir, miniaturas y ordenar en el panel; el build pasa JPG/PNG a WebP |
 | Modo local con Go Live | **hecho** (sin login; solo Chrome/Edge) |
-| Login con GitHub | **preparado** en `auth/` (GitHub App) y **sin desplegar**: falta el paso cero y los pasos de manu |
+| Login con GitHub | Worker y GitHub App montados; **falla el secret** (ver «Dónde lo dejamos») |
 | Webs grandes (1.425 eventos) | va bien en local; la carga desde GitHub y los borradores, **en cuanto haya login** |
 | Versión de Sveltia | fija en **0.229.0**: subirla a mano cada pocos meses, probando antes aquí |
 
