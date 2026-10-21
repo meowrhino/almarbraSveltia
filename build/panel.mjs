@@ -17,9 +17,9 @@
    panel no sabe pintar un campo con dos formas («anyOf»): si sale uno,
    config() lo dice y el build publica sin panel. */
 
-/* El Worker del login con GitHub (auth/, NOTAS-sveltia.md): hasta que
-   esté desplegado, null, y se entra con un token o con la carpeta local. */
-const AUTH = null;
+/* El Worker del login con GitHub (auth/, uno para todas las webs; con null,
+   se entra con un token o con la carpeta local). */
+const AUTH = 'https://sveltia-cms-auth.manuellatourf.workers.dev';
 
 const RELACIONES = {
   'lists.*.projects': {
